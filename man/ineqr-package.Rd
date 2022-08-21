@@ -4,7 +4,11 @@
 \name{ineqr-package}
 \alias{ineqr}
 \alias{ineqr-package}
-\title{ineqr: What the Package Does (Title Case)}
+\title{ineqr: Measures and Plots Inequality}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+Measures inequalities such as the Gini coefficient and plots Lorenz curves from (grouped) data frames.
+}
+\author{
+\strong{Maintainer}: Mizuki Uchida \email{uchidamizuki@vivaldi.net}
+
 }
