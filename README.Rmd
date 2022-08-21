@@ -1,0 +1,86 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# ineqr
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+ineqr measures inequalities such as the Gini coefficient and plots Lorenz curves
+from (grouped) data frames.
+
+## Installation
+
+You can install the development version of ineqr from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("UchidaMizuki/ineqr")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example, warning=FALSE, message=FALSE}
+library(ineqr)
+library(tidyverse)
+
+# Survey of Labour and Income Dynamics
+SLID <- carData::SLID |>
+  as_tibble() |>
+  filter(!is.na(wages))
+
+SLID_agg <- SLID |>
+  mutate(wageclass = cut(wages, 20)) |>
+  group_by(sex, wageclass) |>
+  summarise(wages = mean(wages),
+            pop = n(),
+            .groups = "drop")
+
+SLID
+SLID_agg
+```
+
+```{r}
+SLID |>
+  inequality(wages,
+             index = c("gini", "theil"))
+
+# Measuring inequality by group
+SLID |>
+  group_by(sex) |> 
+  inequality(wages,
+             index = c("gini", "theil"))
+```
+
+```{r}
+# Measuring inequality using weights
+inequality_bysex <- SLID_agg |>
+  group_by(sex) |> 
+  inequality(wages, 
+             weight = pop,
+             index = c("gini", "theil"))
+
+inequality_bysex
+```
+
+```{r}
+# Plotting Lorenz Curves
+autoplot(inequality_bysex) +
+  geom_point() +
+  geom_polygon(alpha = 0.25) +
+  tune::coord_obs_pred()
+```
